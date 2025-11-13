@@ -21,6 +21,7 @@ public:
         // If every char have been removed then this returns true
         return stack.empty();
     }
+    
 private:
     bool is_pair (char left_bracket, char right_bracket) {           // If left and right bracket are a pair returns true
         return ((left_bracket == '[' && right_bracket == ']') ||     // else returns false
