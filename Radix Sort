@@ -1,0 +1,85 @@
+// Homeword Project 1
+// CSC 22000
+//Sandy Chen Chen
+
+#include <cstddef>
+#include "radixSort.h"
+
+struct listnode {
+    unsigned int key;
+    struct listnode *next;
+};
+
+
+struct listnode *sort(struct listnode *a) {
+    const int base = 65536;
+    unsigned int digit;
+    
+    struct listnode *bag_head[base];
+    struct listnode *bag_tail[base];
+    
+    if (a == NULL || a -> next == NULL){
+        return a;
+    }
+    
+    // 32/ 16 = 2
+    for(int pass = 0; pass < 2; pass++){
+        
+        for(int i = 0; i < base; i++){
+            // Innitialize
+            bag_head[i] = NULL;
+            bag_tail[i] = NULL;
+        }
+        
+        // point to the first node of the list
+        struct listnode *curr = a;
+        
+        while( curr != NULL){
+            // store the address of the next address
+            struct listnode *next = curr->next;
+            
+            if(pass == 0){
+                // Take the lower bounded 
+                digit = curr -> key % base;
+            }
+            
+            else{
+                // Take the upper bounded 
+                digit = curr -> key / base;
+            }
+            
+            if(bag_head[digit] == NULL){
+                bag_head[digit] = curr ;
+                bag_tail[digit] = curr;
+            }
+            
+            else{
+                bag_tail[digit] -> next = curr;
+                bag_tail[digit] = curr;
+            }
+            
+            curr = next; 
+        }
+        
+        struct listnode *new_head = NULL;
+        struct listnode *new_tail = NULL;
+        
+        //Combine all no empty bags in order
+        for(int i = 0; i<base; i++){
+            if(bag_head[i] != NULL){
+                if(new_head == NULL){
+                    new_head = bag_head[i];
+                    new_tail = bag_tail[i];
+                 }
+                 
+                 else{
+                     new_tail -> next = bag_head[i];
+                     new_tail = bag_tail[i];
+                 }
+            }
+        }
+        a = new_head;
+    }
+    
+    return a;
+};
